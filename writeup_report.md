@@ -10,7 +10,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./images/placeholder.png "Model Visualization"
+[imgcenter]: ./images/center-lap2.png "Center Camera"
 [image2]: ./images/placeholder.png "Grayscaling"
 [image3]: ./images/placeholder_small.png "Recovery Image"
 [image4]: ./images/placeholder_small.png "Recovery Image"
@@ -66,15 +66,16 @@ For details about how I created the training data, see the next section.
 
 #### 1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to reuse the a
+The overall strategy for deriving a model architecture was to reuse the nVidia's self driving model, then focus on preparing preprocessing training datasets.
 
 My first step was to use a convolution neural network model similar to the Nividia's self driving model. I thought this model might be appropriate because it is quite small and simple, while it 
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
+In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. The models had low mean squared error on the training set and also quite low mean squared error on the validation set. This implied the the training data might not be diversified enough to teach the model to capture the characteristics of images that leads to the steering decisions.
 
-To combat the overfitting, I modified the model so that ...
+To add more data points for training, I added left-right flipped images; then added images from left camera and right camera -- this step was proved to be very helpful to stablize the cars' movement and the car seemed to capture the idea of staying on track with these sets. I also re-ran recovery runs multiple times to get better record starting points and better recovering courses.
 
-Then I ... 
+However the model still could not finish one lap and always run out the turns on the right side, which means the models are not alertive and move drasticThis implied that the model was overfitting. To combat the overfitting, I modified the model by injecting drop out layers following almost every layers.
+
 
 The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
 
@@ -92,7 +93,7 @@ Here is a visualization of the architecture (note: visualizing the architecture 
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![Center Camera][imgcenter]
 
 I then recorded one lap driving on opposite direction.
 
@@ -104,8 +105,6 @@ I then recorded the vehicle recovering from the left side and right sides of the
 
 The data sets include 2 laps on anti-clock-wise direction, one lap on close-wise direction, two sets for recovering from left and right, and three sets for the three turns in the lap.
 
-The brightness of images were randomly adjusted so the data of continuous images could be very different thus the model could focus on really important characteristics of the images. 
-
 I also use images from left camera and right camera with adjusted steering as training datasets. This prove to be very helpful to teach the car to stay in the track.
 
 To augment the data set, I also flipped images and angles thinking that this would provide more diversity to training data.
@@ -116,8 +115,7 @@ To augment the data set, I also flipped images and angles thinking that this wou
 
 Etc ....
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
+After the collection process, I had more than 20K number of data points. I then preprocessed this data by randomly adjusting the brightnes so that the data of continuous images could be very different from each other thus the model could focus on really important characteristics of the images that are related to staying on track. 
 
 I finally randomly shuffled the data set and put 10% of the data into a validation set. 
 
